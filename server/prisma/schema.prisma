@@ -9,3 +9,37 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Knowledge {
+  id        Int        @id @default(autoincrement())
+  name      String
+  field     String
+  learned   Boolean    @default(false)
+  resources Resource[]
+  Tech      Tech[]
+}
+
+model Resource {
+  id          Int       @id @default(autoincrement())
+  name        String
+  link        String
+  learned     Boolean   @default(false)
+  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id])
+  knowledgeId Int
+}
+
+model Project {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  done        Boolean @default(false)
+  Tech        Tech[]
+}
+
+model Tech {
+  id          Int       @id @default(autoincrement())
+  project     Project   @relation(fields: [projectId], references: [id])
+  projectId   Int
+  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id])
+  knowledgeId Int
+}
